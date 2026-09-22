@@ -96,8 +96,19 @@ body {
   transition: color 0.15s;
 }
 
+/* Pressed but not ready — holding */
+.timer.holding {
+  color: #ff4444;
+}
+
+/* Armed and ready to start */
 .timer.ready {
   color: #4ade80;
+}
+
+/* Timer is running */
+.timer.running {
+  color: #7dd3fc;
 }
 
 .timer.running {

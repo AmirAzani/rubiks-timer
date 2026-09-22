@@ -50,7 +50,7 @@ let elapsed = 0;
 let timerInterval = null;
 let holdTimeout = null;
 
-const HOLD_DELAY = 300;    // ms to hold space before ready (green)
+const READY_DELAY = 500;   // hold this long → armed (green)
 
 // ================================
 // SCRAMBLE GENERATOR
@@ -105,12 +105,11 @@ function startTimer() {
   timerState = 'running';
   startTime = Date.now();
   elapsed = 0;
-  timerEl.classList.remove('ready');
+  timerEl.classList.remove('ready', 'holding');
   timerEl.classList.add('running');
-  statusEl.textContent = 'Press SPACE to stop';
+  statusEl.textContent = 'Press SPACE / tap to stop';
   timerInterval = setInterval(updateTimerDisplay, 10);
 }
-
 function stopTimer() {
   clearInterval(timerInterval);
   timerState = 'idle';
@@ -132,8 +131,45 @@ function resetTimer() {
   timerState = 'idle';
   elapsed = 0;
   timerEl.textContent = '00:00.000';
-  timerEl.classList.remove('ready', 'running');
-  statusEl.textContent = 'Hold SPACE or tap & hold';
+  timerEl.classList.remove('ready', 'running', 'holding');
+  statusEl.textContent = 'Hold SPACE or press & hold';
+}
+// ================================
+// PRESS HANDLERS (shared by key + touch)
+// ================================
+
+function pressStart() {
+  if (timerState !== 'idle') return;
+
+  timerState = 'holding';
+  timerEl.classList.remove('ready');
+  timerEl.classList.add('holding');
+  statusEl.textContent = 'Keep holding...';
+
+  // Arm the timer after READY_DELAY
+  holdTimeout = setTimeout(() => {
+    if (timerState === 'holding') {
+      timerState = 'ready';
+      timerEl.classList.remove('holding');
+      timerEl.classList.add('ready');
+      statusEl.textContent = 'Release to start!';
+    }
+  }, READY_DELAY);
+}
+
+function pressEnd() {
+  clearTimeout(holdTimeout);
+
+  if (timerState === 'ready') {
+    // Green: start the timer
+    startTimer();
+  }
+  else if (timerState === 'holding') {
+    // Red: cancelled — didn't hold long enough
+    timerState = 'idle';
+    timerEl.classList.remove('holding');
+    statusEl.textContent = 'Hold SPACE or press & hold';
+  }
 }
 
 // ================================
@@ -142,22 +178,12 @@ function resetTimer() {
 document.addEventListener('keydown', (e) => {
   if (e.code !== 'Space') return;
   e.preventDefault();
-
-  // Ignore key repeat
   if (e.repeat) return;
 
   if (timerState === 'idle') {
-    timerState = 'holding';
-    timerEl.classList.add('ready');
-    statusEl.textContent = 'Release to start...';
-
-    // After HOLD_DELAY, it's "armed" (already green)
-    holdTimeout = setTimeout(() => {
-      timerEl.classList.add('ready');
-    }, HOLD_DELAY);
+    pressStart();
   }
-
-  if (timerState === 'running') {
+  else if (timerState === 'running') {
     stopTimer();
   }
 });
@@ -166,56 +192,51 @@ document.addEventListener('keyup', (e) => {
   if (e.code !== 'Space') return;
   e.preventDefault();
 
-  if (timerState === 'holding') {
-    clearTimeout(holdTimeout);
-    startTimer();
+  if (timerState === 'holding' || timerState === 'ready') {
+    pressEnd();
   }
 });
 // ================================
-// TOUCH / CLICK CONTROLS
+// TOUCH / MOUSE CONTROLS
 // ================================
-// For mobile (and mouse users).
-
-function handlePointerDown(e) {
+timerBox.addEventListener('pointerdown', (e) => {
   e.preventDefault();
 
   if (timerState === 'idle') {
-    timerState = 'holding';
-    timerEl.classList.add('ready');
-    statusEl.textContent = 'Release to start...';
-
-    holdTimeout = setTimeout(() => {
-      timerEl.classList.add('ready');
-    }, HOLD_DELAY);
+    pressStart();
   }
   else if (timerState === 'running') {
     stopTimer();
   }
-}
+});
 
-function handlePointerUp(e) {
+timerBox.addEventListener('pointerup', (e) => {
   e.preventDefault();
 
-  if (timerState === 'holding') {
-    clearTimeout(holdTimeout);
-    startTimer();
-  }
-}
-
-// Use Pointer Events — works for touch AND mouse
-timerBox.addEventListener('pointerdown', handlePointerDown);
-timerBox.addEventListener('pointerup', handlePointerUp);
-
-// Safety: if pointer leaves the box while holding, cancel
-timerBox.addEventListener('pointercancel', () => {
-  if (timerState === 'holding') {
-    clearTimeout(holdTimeout);
-    timerState = 'idle';
-    timerEl.classList.remove('ready');
-    statusEl.textContent = 'Hold SPACE or tap & hold';
+  if (timerState === 'holding' || timerState === 'ready') {
+    pressEnd();
   }
 });
 
+// Safety: cancel if pointer leaves the box
+timerBox.addEventListener('pointercancel', () => {
+  clearTimeout(holdTimeout);
+
+  if (timerState === 'holding' || timerState === 'ready') {
+    timerState = 'idle';
+    timerEl.classList.remove('holding', 'ready');
+    statusEl.textContent = 'Hold SPACE or press & hold';
+  }
+});
+
+timerBox.addEventListener('pointerleave', () => {
+  if (timerState === 'holding' || timerState === 'ready') {
+    clearTimeout(holdTimeout);
+    timerState = 'idle';
+    timerEl.classList.remove('holding', 'ready');
+    statusEl.textContent = 'Hold SPACE or press & hold';
+  }
+});
 // ================================
 // STORAGE
 // ================================
