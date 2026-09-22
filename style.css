@@ -446,4 +446,16 @@ body {
 
 .modal-actions .btn-small {
   flex: 1;
+}/* ================================
+   TIMER TOUCH AREA
+   ================================ */
+.timer-box {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;  /* remove blue flash on mobile */
+  touch-action: manipulation;                /* prevent double-tap zoom */
+  user-select: none;
+}
+
+.timer-box:active .timer {
+  opacity: 0.9;
 }

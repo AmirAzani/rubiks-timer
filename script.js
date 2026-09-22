@@ -18,6 +18,7 @@ const OPPOSITE = {
 const scrambleEl    = document.getElementById('scramble');
 const newScrambleBtn = document.getElementById('newScrambleBtn');
 const timerEl       = document.getElementById('timer');
+const timerBox      = document.getElementById('timerBox');
 const statusEl      = document.getElementById('status');
 const bestEl        = document.getElementById('best');
 const lastEl        = document.getElementById('last');
@@ -35,6 +36,7 @@ const modalTime        = document.getElementById('modalTime');
 const modalDate        = document.getElementById('modalDate');
 const modalScramble    = document.getElementById('modalScramble');
 const modalCube        = document.getElementById('modalCube');
+
 // ================================
 // STATE
 // ================================
@@ -115,9 +117,10 @@ function stopTimer() {
   elapsed = Date.now() - startTime;
   timerEl.textContent = formatTime(elapsed);
   timerEl.classList.remove('running');
-  statusEl.textContent = 'Hold SPACE to start';
+  statusEl.textContent = 'Hold SPACE or tap & hold';
 
   saveSolve(elapsed, currentScramble);
+
 
     // Load a new scramble for the next solve
   currentScramble = generateScramble();
@@ -130,7 +133,7 @@ function resetTimer() {
   elapsed = 0;
   timerEl.textContent = '00:00.000';
   timerEl.classList.remove('ready', 'running');
-  statusEl.textContent = 'Hold SPACE to start';
+  statusEl.textContent = 'Hold SPACE or tap & hold';
 }
 
 // ================================
@@ -166,6 +169,50 @@ document.addEventListener('keyup', (e) => {
   if (timerState === 'holding') {
     clearTimeout(holdTimeout);
     startTimer();
+  }
+});
+// ================================
+// TOUCH / CLICK CONTROLS
+// ================================
+// For mobile (and mouse users).
+
+function handlePointerDown(e) {
+  e.preventDefault();
+
+  if (timerState === 'idle') {
+    timerState = 'holding';
+    timerEl.classList.add('ready');
+    statusEl.textContent = 'Release to start...';
+
+    holdTimeout = setTimeout(() => {
+      timerEl.classList.add('ready');
+    }, HOLD_DELAY);
+  }
+  else if (timerState === 'running') {
+    stopTimer();
+  }
+}
+
+function handlePointerUp(e) {
+  e.preventDefault();
+
+  if (timerState === 'holding') {
+    clearTimeout(holdTimeout);
+    startTimer();
+  }
+}
+
+// Use Pointer Events — works for touch AND mouse
+timerBox.addEventListener('pointerdown', handlePointerDown);
+timerBox.addEventListener('pointerup', handlePointerUp);
+
+// Safety: if pointer leaves the box while holding, cancel
+timerBox.addEventListener('pointercancel', () => {
+  if (timerState === 'holding') {
+    clearTimeout(holdTimeout);
+    timerState = 'idle';
+    timerEl.classList.remove('ready');
+    statusEl.textContent = 'Hold SPACE or tap & hold';
   }
 });
 
@@ -214,7 +261,7 @@ function updateStats() {
 }
 function renderHistory() {
   if (history.length === 0) {
-    historyEl.innerHTML = '<div class="history-empty">No solves yet. Hold SPACE to start!</div>';
+    historyEl.innerHTML = '<div class="history-empty">No solves yet. Hold SPACE or tap & hold!</div>';
     return;
   }
 
@@ -277,7 +324,7 @@ resetBtn.addEventListener('click', () => {
   scrambleEl.textContent = currentScramble;
   updateCubeFromScramble(currentScramble);
 
-  statusEl.textContent = 'Session reset — Hold SPACE to start';
+  statusEl.textContent = 'Session reset — Hold SPACE or tap & hold';
 });
 // ================================
 // MODAL
@@ -335,7 +382,7 @@ modalLoad.addEventListener('click', () => {
   scrambleEl.textContent = item.scramble;
   updateCubeFromScramble(item.scramble);
   resetTimer();
-  statusEl.textContent = 'Scramble loaded — Hold SPACE to start';
+  statusEl.textContent = 'Scramble loaded — Hold SPACE or tap & hold';
 
   closeModal();
 });
