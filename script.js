@@ -36,6 +36,7 @@ const modalTime        = document.getElementById('modalTime');
 const modalDate        = document.getElementById('modalDate');
 const modalScramble    = document.getElementById('modalScramble');
 const modalCube        = document.getElementById('modalCube');
+const undoBtn = document.getElementById('undoBtn');
 
 // ================================
 // STATE
@@ -43,6 +44,8 @@ const modalCube        = document.getElementById('modalCube');
 let currentScramble = '';
 let history = [];          // { time, scramble, isPB }
 let bestTime = null;
+let lastDeleted = null;   // { item, index } — for undo
+
 
 let timerState = 'idle';   // idle | holding | running
 let startTime = 0;
@@ -282,7 +285,8 @@ function updateStats() {
 }
 function renderHistory() {
   if (history.length === 0) {
-    historyEl.innerHTML = '<div class="history-empty">No solves yet. Hold SPACE or tap & hold!</div>';
+    historyEl.innerHTML = '<div class="history-empty">No solves yet. Hold SPACE to start!</div>';
+    updateUndoButton();
     return;
   }
 
@@ -291,9 +295,99 @@ function renderHistory() {
       <span class="history-time">${formatTime(item.time)}</span>
       ${item.isPB ? '<span class="pb-badge">PB</span>' : ''}
       <span class="history-scramble">${item.scramble}</span>
+      <button class="history-delete" data-delete-index="${index}" title="Delete solve">×</button>
     </div>
   `).join('');
+  // ================================
+// DELETE / UNDO
+// ================================
+function deleteSolve(index) {
+  const item = history[index];
+  if (!item) return;
 
+  // Save for undo
+  lastDeleted = { item, index };
+
+  // Remove from history
+  history.splice(index, 1);
+
+  // Recalculate best time (it might have been the PB)
+  recalculateBestTime();
+
+  // Save + refresh UI
+  saveHistoryToStorage();
+  updateStats();
+  renderHistory();
+}
+
+function undoDelete() {
+  if (!lastDeleted) return;
+
+  const { item, index } = lastDeleted;
+
+  // Insert at original position (or at start if index is too large)
+  const safeIndex = Math.min(index, history.length);
+  history.splice(safeIndex, 0, item);
+
+  // Clear the undo state (single-level undo)
+  lastDeleted = null;
+
+  // Recalculate best time (restored solve might be the PB)
+  recalculateBestTime();
+
+  saveHistoryToStorage();
+  updateStats();
+  renderHistory();
+}
+
+function updateUndoButton() {
+  if (lastDeleted) {
+    undoBtn.disabled = false;
+    undoBtn.textContent = 'Undo Delete';
+  } else {
+    undoBtn.disabled = true;
+    undoBtn.textContent = 'Undo Delete';
+  }
+}
+
+function recalculateBestTime() {
+  if (history.length === 0) {
+    bestTime = null;
+    return;
+  }
+  bestTime = Math.min(...history.map(item => item.time));
+}
+
+function saveHistoryToStorage() {
+  localStorage.setItem('cubeTimer_history', JSON.stringify(history));
+  if (bestTime !== null) {
+    localStorage.setItem('cubeTimer_best', bestTime);
+  } else {
+    localStorage.removeItem('cubeTimer_best');
+  }
+}
+
+  // Click on item → open modal
+  historyEl.querySelectorAll('.history-item').forEach(el => {
+    el.addEventListener('click', (e) => {
+      // Ignore if delete button was clicked
+      if (e.target.classList.contains('history-delete')) return;
+      const idx = parseInt(el.dataset.index);
+      openModal(idx);
+    });
+  });
+
+  // Click on × → delete that solve
+  historyEl.querySelectorAll('.history-delete').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const idx = parseInt(btn.dataset.deleteIndex);
+      deleteSolve(idx);
+    });
+  });
+
+  updateUndoButton();
+}
   // Click to open modal
   historyEl.querySelectorAll('.history-item').forEach(el => {
     el.addEventListener('click', () => {
@@ -301,7 +395,7 @@ function renderHistory() {
       openModal(idx);
     });
   });
-}
+
 
 // ================================
 // BUTTON
@@ -326,8 +420,9 @@ resetBtn.addEventListener('click', () => {
   if (!confirmed) return;
 
   // Clear state
-  history = [];
+    history = [];
   bestTime = null;
+  lastDeleted = null;
 
   // Clear storage
   localStorage.removeItem('cubeTimer_history');
@@ -346,6 +441,12 @@ resetBtn.addEventListener('click', () => {
   updateCubeFromScramble(currentScramble);
 
   statusEl.textContent = 'Session reset — Hold SPACE or tap & hold';
+});
+// ================================
+// UNDO BUTTON
+// ================================
+undoBtn.addEventListener('click', () => {
+  undoDelete();
 });
 // ================================
 // MODAL

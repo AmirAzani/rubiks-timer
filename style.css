@@ -470,3 +470,41 @@ body {
 .timer-box:active .timer {
   opacity: 0.9;
 }
+/* ================================
+   HISTORY ACTIONS
+   ================================ */
+.history-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.history-actions .btn-small {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+.btn-small:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Delete button on each history item */
+.history-delete {
+  background: transparent;
+  border: none;
+  color: #6b6b7b;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0 4px;
+  border-radius: 4px;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+
+.history-delete:hover {
+  background: rgba(239, 68, 68, 0.15);
+  color: #dc2626;
+}

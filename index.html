@@ -8,7 +8,7 @@
 </head>
 <body>
 
-    <div class="app">
+  <div class="app">
 
     <!-- Scramble Display -->
     <div class="scramble-box">
@@ -52,17 +52,21 @@
       </div>
     </div>
 
-       <!-- History -->
+    <!-- History -->
     <div class="history-box">
       <div class="history-header">
-        <div class="label">HISTORY (click to load scramble)</div>
-        <button id="resetBtn" class="btn-small btn-danger">Reset Session</button>
+        <div class="label">HISTORY</div>
+        <div class="history-actions">
+          <button id="undoBtn" class="btn-small" disabled>Undo Delete</button>
+          <button id="resetBtn" class="btn-small btn-danger">Reset Session</button>
+        </div>
       </div>
       <div id="history" class="history"></div>
     </div>
 
   </div>
-    <!-- Modal -->
+
+  <!-- Modal -->
   <div id="modal" class="modal-overlay hidden">
     <div class="modal-card">
       <button id="modalClose" class="modal-close">×</button>
@@ -84,7 +88,7 @@
     </div>
   </div>
 
-   <script src="cube.js"></script>
+  <script src="cube.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
