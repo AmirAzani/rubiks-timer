@@ -84,16 +84,27 @@ body {
    ================================ */
 .timer-box {
   text-align: center;
-  padding: 30px 20px;
+  padding: 60px 20px;
+  margin: 10px 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  min-height: 240px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .timer {
   font-family: 'Consolas', 'Courier New', monospace;
-  font-size: 72px;
+  font-size: 110px;
   font-weight: 700;
-  color: #ffffff;
+  color: #1a1a2e;
   letter-spacing: 2px;
   transition: color 0.15s;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
 }
 
 /* Pressed but not ready — holding */
@@ -257,27 +268,35 @@ body {
    ================================ */
 @media (max-width: 500px) {
   .timer {
-    font-size: 52px;
+    font-size: 68px;
+  }
+  .timer-box {
+    padding: 50px 16px;
+    min-height: 200px;
   }
   .scramble {
     font-size: 16px;
   }
-  .stats-box {
-    grid-template-columns: 1fr 1fr 1fr;
+  .cube {
+    max-width: 160px;
   }
   .history-scramble {
     display: none;
   }
-}/* ================================
+}
+/* ================================
    CUBE PREVIEW
    ================================ */
 .cube-box {
-  background: #1a1a24;
-  border: 1px solid #262633;
-  border-radius: 12px;
-  padding: 14px;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 16px;
+  padding: 10px;
   display: flex;
   justify-content: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
 
 .cube {
@@ -286,7 +305,7 @@ body {
   grid-template-rows: repeat(9, 1fr);
   gap: 1.5px;
   width: 100%;
-  max-width: 280px;
+  max-width: 200px;
   aspect-ratio: 12 / 9;
 }
 
