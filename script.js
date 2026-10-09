@@ -89,14 +89,19 @@ function generateScramble() {
 // TIMER
 // ================================
 function formatTime(ms) {
-  const totalSeconds = Math.floor(ms / 1000);
+  // WCA standard: SS.MM (2 decimals), or M:SS.MM if >= 1 minute
+  const totalSeconds = ms / 1000;
   const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  const millis = ms % 1000;
+  const seconds = totalSeconds - minutes * 60;
 
-  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}.${String(millis).padStart(3, '0')}`;
+  // Truncate (not round) to match WCA rules
+  const secStr = (Math.floor(seconds * 100) / 100).toFixed(2).padStart(5, '0');
+
+  if (minutes > 0) {
+    return `${minutes}:${secStr}`;
+  }
+  return secStr;
 }
-
 function updateTimerDisplay() {
   if (timerState === 'running') {
     elapsed = Date.now() - startTime;
@@ -133,7 +138,7 @@ function stopTimer() {
 function resetTimer() {
   timerState = 'idle';
   elapsed = 0;
-  timerEl.textContent = '00:00.000';
+  timerEl.textContent = '0.00';
   timerEl.classList.remove('ready', 'running', 'holding');
   statusEl.textContent = 'Hold SPACE or press & hold';
 }

@@ -101,7 +101,7 @@ body {
   font-family: 'Consolas', 'Courier New', monospace;
   font-size: 110px;
   font-weight: 700;
-  color: #1a1a2e;
+  color: #ffffff;
   letter-spacing: 2px;
   transition: color 0.15s;
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
@@ -288,7 +288,7 @@ body {
    CUBE PREVIEW
    ================================ */
 .cube-box {
-  background: rgba(255, 255, 255, 0.75);
+  background: rgba(8, 8, 8, 0.75);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.4);
@@ -303,17 +303,20 @@ body {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   grid-template-rows: repeat(9, 1fr);
-  gap: 1.5px;
+  gap: 1px;
   width: 100%;
   max-width: 200px;
   aspect-ratio: 12 / 9;
+  padding: 4px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
 }
 
 .sticker {
   border-radius: 2px;
   border: 1px solid rgba(0, 0, 0, 0.4);
+  margin: 0.5px;
 }
-
 .sticker.W { background: #ffffff; }
 .sticker.Y { background: #ffd500; }
 .sticker.G { background: #009b48; }
