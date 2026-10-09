@@ -1,0 +1,10 @@
+You still learn :
+
+
+How to load and run a PyTorch model
+
+How to build a REST API
+
+How to deploy Python to the cloud
+
+How to connect frontend ↔ backend

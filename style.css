@@ -508,3 +508,6 @@ body {
   background: rgba(239, 68, 68, 0.15);
   color: #dc2626;
 }
+.solver-link-box {
+  text-align: center;
+}

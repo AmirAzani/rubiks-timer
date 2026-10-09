@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Cube Solver</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="solver.css">
+</head>
+<body>
+
+  <div class="app">
+
+    <!-- Header -->
+    <div class="solver-header">
+      <h1 class="solver-title">AI Cube Solver</h1>
+      <p class="solver-subtitle">Paint your cube. Get the solution.</p>
+      <a href="index.html" class="btn-small back-link">← Back to Timer</a>
+    </div>
+
+    <!-- Color Palette -->
+    <div class="palette-box">
+      <div class="label">PICK A COLOR</div>
+      <div class="palette">
+        <button class="color-swatch selected" data-color="W" title="White (U)">
+          <span class="swatch-inner W"></span>
+        </button>
+        <button class="color-swatch" data-color="Y" title="Yellow (D)">
+          <span class="swatch-inner Y"></span>
+        </button>
+        <button class="color-swatch" data-color="G" title="Green (F)">
+          <span class="swatch-inner G"></span>
+        </button>
+        <button class="color-swatch" data-color="B" title="Blue (B)">
+          <span class="swatch-inner B"></span>
+        </button>
+        <button class="color-swatch" data-color="O" title="Orange (L)">
+          <span class="swatch-inner O"></span>
+        </button>
+        <button class="color-swatch" data-color="R" title="Red (R)">
+          <span class="swatch-inner R"></span>
+        </button>
+      </div>
+      <div class="palette-hint">
+        Click a color above, then click a sticker below to paint it.
+      </div>
+    </div>
+
+    <!-- Cube Input Grid -->
+    <div class="cube-input-box">
+      <div class="label">PAINT YOUR CUBE</div>
+      <div id="cubeInput" class="cube-input"></div>
+    </div>
+
+    <!-- Actions -->
+    <div class="solver-actions">
+      <button id="solveBtn" class="btn-small btn-primary" disabled>Solve Cube</button>
+      <button id="resetInputBtn" class="btn-small">Clear</button>
+      <button id="fillSolvedBtn" class="btn-small">Fill Solved State</button>
+    </div>
+
+    <!-- Status -->
+    <div id="solverStatus" class="solver-status">
+      Fill all 54 stickers to enable solving. 0 / 54
+    </div>
+
+    <!-- Result -->
+    <div id="resultBox" class="result-box hidden">
+      <div class="label">SOLUTION</div>
+      <div id="solutionMoves" class="solution-moves">—</div>
+      <button id="copySolutionBtn" class="btn-small">Copy Solution</button>
+    </div>
+
+  </div>
+
+  <script src="solver.js"></script>
+</body>
+</html>
