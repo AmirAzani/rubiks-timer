@@ -508,6 +508,47 @@ body {
   background: rgba(239, 68, 68, 0.15);
   color: #dc2626;
 }
+/* ================================
+   SOLVER LINK BUTTON
+   ================================ */
 .solver-link-box {
   text-align: center;
+}
+
+.btn-solver {
+  display: inline-block;
+  background: #4c1d95;
+  color: #ffffff;
+  border: 2px solid #4c1d95;
+  padding: 14px 32px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-decoration: none;
+  transition: all 0.2s;
+  box-shadow: 0 4px 16px rgba(76, 29, 149, 0.3);
+}
+
+.btn-solver:hover {
+  background: #5b21b6;
+  border-color: #5b21b6;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(76, 29, 149, 0.45);
+}
+
+.btn-solver:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 16px rgba(76, 29, 149, 0.3);
+}
+
+/* Mobile */
+@media (max-width: 500px) {
+  .btn-solver {
+    padding: 12px 24px;
+    font-size: 15px;
+    width: 100%;
+    max-width: 320px;
+  }
 }
