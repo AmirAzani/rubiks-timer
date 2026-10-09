@@ -213,3 +213,15 @@
   .color-swatch { width: 38px; height: 38px; }
   .solution-moves { font-size: 18px; word-spacing: 6px; }
 }
+/* ================================
+   LOCKED CENTER STICKERS
+   ================================ */
+.input-sticker.center {
+  cursor: not-allowed;
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.35);
+}
+
+.input-sticker.center:hover {
+  transform: none;
+  border-color: rgba(0, 0, 0, 0.15);
+}

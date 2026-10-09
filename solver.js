@@ -43,10 +43,21 @@ const copySolutionBtn = document.getElementById('copySolutionBtn');
 // ================================
 // INIT
 // ================================
+// The center sticker (index 4) of each face = that face's color
+const CENTER_COLORS = {
+  U: 'W',   // White
+  R: 'R',   // Red
+  F: 'G',   // Green
+  D: 'Y',   // Yellow
+  L: 'O',   // Orange
+  B: 'B'    // Blue
+};
+
 function initCubeState() {
   cubeState = {};
   FACE_ORDER.forEach(face => {
     cubeState[face] = Array(9).fill(null);
+    cubeState[face][4] = CENTER_COLORS[face];   // ← pre-fill center
   });
 }
 
@@ -73,13 +84,21 @@ function renderInputGrid() {
     }
   });
 
-  grid.forEach(cell => {
+    grid.forEach(cell => {
     const div = document.createElement('div');
     if (cell.face) {
+      const isCenter = cell.index === 4;
+
       div.className = 'input-sticker empty';
       div.dataset.face = cell.face;
       div.dataset.index = cell.index;
-      div.addEventListener('click', () => paintSticker(cell.face, cell.index));
+
+      if (isCenter) {
+        div.classList.add('center');
+        // No click listener — center is locked
+      } else {
+        div.addEventListener('click', () => paintSticker(cell.face, cell.index));
+      }
     } else {
       div.style.visibility = 'hidden';
     }
@@ -108,10 +127,10 @@ function refreshStickerColors() {
 }
 
 function paintSticker(face, index) {
+  if (index === 4) return;   // ← don't paint centers
   cubeState[face][index] = selectedColor;
   refreshStickerColors();
 }
-
 // ================================
 // PALETTE
 // ================================
@@ -136,11 +155,11 @@ function countFilled() {
 
 function updateProgress() {
   const filled = countFilled();
-  const total = 54;
+  const total = 54;   // includes the 6 auto-filled centers
 
   solverStatus.textContent = filled === total
     ? 'All stickers filled! Ready to solve.'
-    : `Fill all 54 stickers to enable solving. ${filled} / ${total}`;
+    : `Fill the rest of the stickers. ${filled} / ${total}`;
 
   solveBtn.disabled = filled !== total;
 }
