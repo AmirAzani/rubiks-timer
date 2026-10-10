@@ -240,35 +240,27 @@ body {
    CUBE PREVIEW (with face separation)
    ================================ */
 .cube-box {
-  background: rgba(8, 8, 8, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  padding: 16px;
+  background: #1a1a24;
+  border: 1px solid #262633;
+  border-radius: 12px;
+  padding: 20px;
   display: flex;
   justify-content: center;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 .cube {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   grid-template-rows: repeat(9, 1fr);
-  /* Big gap creates space BETWEEN faces, small gap inside comes from sticker margins */
-  column-gap: 8px;
-  row-gap: 8px;
+  gap: 3px;
   width: 100%;
-  max-width: 220px;
+  max-width: 320px;
   aspect-ratio: 12 / 9;
-  padding: 6px;
-  background: rgba(0, 0, 0, 0.4);
-  border-radius: 8px;
 }
 
 .sticker {
-  border-radius: 3px;
-  border: 0.5px solid rgba(0, 0, 0, 0.6);
+  border-radius: 2px;
+  border: 1px solid rgba(0, 0, 0, 0.4);
 }
 
 .sticker.W { background: #ffffff; }
@@ -522,14 +514,10 @@ body {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   grid-template-rows: repeat(9, 1fr);
-  column-gap: 8px;
-  row-gap: 8px;
+  gap: 3px;
   width: 100%;
   max-width: 280px;
   aspect-ratio: 12 / 9;
-  padding: 6px;
-  background: rgba(0, 0, 0, 0.4);
-  border-radius: 8px;
   margin: 0 auto 24px;
 }
 
@@ -563,11 +551,11 @@ body {
   .scramble {
     font-size: 16px;
   }
-  .cube {
-    max-width: 180px;
+    .cube {
+    max-width: 260px;
   }
-  .modal-cube {
-    max-width: 220px;
+    .modal-cube {
+    max-width: 240px;
   }
   .history-scramble {
     display: none;
