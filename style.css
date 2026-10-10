@@ -268,7 +268,7 @@ body {
 
 .sticker {
   border-radius: 3px;
-  border: 1px solid rgba(0, 0, 0, 0.6);
+  border: 0.5px solid rgba(0, 0, 0, 0.6);
 }
 
 .sticker.W { background: #ffffff; }
